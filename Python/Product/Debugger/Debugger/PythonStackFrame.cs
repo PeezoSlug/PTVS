@@ -21,8 +21,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Python.Parsing;
+using Microsoft.PythonTools.Analysis;
 using Microsoft.PythonTools.Infrastructure;
+using Microsoft.PythonTools.Parsing;
 
 namespace Microsoft.PythonTools.Debugger {
     class PythonStackFrame {
@@ -137,7 +138,7 @@ namespace Microsoft.PythonTools.Debugger {
         public virtual bool TryParseText(string text, out string errorMsg) {
             CollectingErrorSink errorSink = new CollectingErrorSink();
             Parser parser = Parser.CreateParser(new StringReader(text), _thread.Process.LanguageVersion, new ParserOptions() { ErrorSink = errorSink });
-            var ast = parser.ParseFile();
+            var ast = parser.ParseSingleStatement();
             if (errorSink.Errors.Count > 0) {
                 StringBuilder msg = new StringBuilder();
                 foreach (var error in errorSink.Errors) {
